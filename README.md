@@ -2,6 +2,9 @@
 
 Guide:
 
+Start server with:
+  mvn clean compile exec:java
+
 To start a new game go to:
  http://localhost:8080/game/new/<player1name>/<player2name>/  (put in any string values you want to use as identifiers for player 1 and 2)
  

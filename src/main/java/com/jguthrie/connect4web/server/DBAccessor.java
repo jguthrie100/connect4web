@@ -8,12 +8,12 @@ public class DBAccessor {
 	final static String PASSWORD = "javapass1";
 	final static String DATABASE = "connect4web";
 	final static String GAMES_TABLE = "games";
-	final static String JDBC_URL = "jdbc:mysql://localhost:3306/" + DATABASE;
+	final static String JDBC_URL = "jdbc:mysql://localhost:3306/" + DATABASE + "?useSSL=false";
 	
 	
 	public static void init() {
 		
-		String temp_url = "jdbc:mysql://localhost:3306/";
+		String temp_url = "jdbc:mysql://localhost:3306/?useSSL=false";
 		
 		try (Connection connection = DriverManager.getConnection(temp_url, USERNAME, PASSWORD)) {
 			

@@ -1,8 +1,9 @@
-com/jguthrie/glucktest/server/JettyServer.class
-com/jguthrie/glucktest/models/Board.class
-com/jguthrie/glucktest/server/GameHandler.class
-com/jguthrie/glucktest/server/DBAccessor.class
-com/jguthrie/glucktest/models/Token.class
-com/jguthrie/glucktest/models/Game.class
-com/jguthrie/glucktest/models/Token$Color.class
-com/jguthrie/glucktest/server/GameServer.class
+com/jguthrie/connect4web/server/GameServlet.class
+com/jguthrie/connect4web/server/UpdatesServlet.class
+com/jguthrie/connect4web/models/GameCollection.class
+com/jguthrie/connect4web/models/Token.class
+com/jguthrie/connect4web/models/Token$Color.class
+com/jguthrie/connect4web/models/Game.class
+com/jguthrie/connect4web/server/JettyServer.class
+com/jguthrie/connect4web/models/Board.class
+com/jguthrie/connect4web/server/DBAccessor.class
