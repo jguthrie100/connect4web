@@ -21,6 +21,7 @@ public class JettyServer {
 	    DBAccessor.init();
 	    gServer = new GameCollection();
 
+	    // Don't fully understand all this. Copied from various sources on the internet
 	    WebAppContext webappcontext = new WebAppContext();
 	    webappcontext.setContextPath("/");
   		webappcontext.setAttribute("org.eclipse.jetty.server.webapp.ContainerIncludeJarPattern",".*/[^/]*jstl.*\\.jar$");

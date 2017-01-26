@@ -32,7 +32,7 @@ public class GameServlet extends HttpServlet {
 			PrintWriter out = response.getWriter();
 			
 			htmlOut += "<h1>Welcome to Jamie's Connect 4 Game..</h1>";
-			htmlOut += "<a href=\"/game/new\">Start new game</a> | ";
+			htmlOut += "<a href=\"/game/new/player1/player2\">Start new game</a> | ";
 			htmlOut += "<a href=\"/game/join\">Join a game</a> | ";
 			htmlOut += "<a href=\"/game/load\">Load a game</a>";
 			
@@ -43,7 +43,7 @@ public class GameServlet extends HttpServlet {
 			
 			int gameId = gServer.newGame(request.getRequestURI().split("/")[3], request.getRequestURI().split("/")[4]);
 			
-            request.getRequestDispatcher("/game/"+ gameId + "/").forward(request, response);
+            request.getRequestDispatcher("/game/"+ gameId + "/?pid=" + request.getRequestURI().split("/")[3]).forward(request, response);
             
         // Handles redirecting to a specific game (and making moves)
 		} else if(request.getRequestURI().matches("/game/\\d+(/*?)")) {
@@ -52,23 +52,31 @@ public class GameServlet extends HttpServlet {
 				int gameId = Integer.parseInt(request.getRequestURI().split("/")[2]);
 				Game game = gServer.getGame(gameId);
 				
-				// Make move and save move to DB if valid
-				if(request.getParameter("move") != null) {
-					int move = Integer.parseInt(request.getParameter("move"));
-					if(game.playMove(move, gServer.getGame(gameId).getPlayer(pid))) {
-						DBAccessor.saveMove(gameId, move);
+				if(game != null) {
+					// Make move and save move to DB if valid
+					if(request.getParameter("move") != null) {
+						int move = Integer.parseInt(request.getParameter("move"));
+						if(game.playMove(move, gServer.getGame(gameId).getPlayer(pid))) {
+							DBAccessor.saveMove(gameId, move);
+						}
 					}
 					
-				}
+					// Redirect to JSP page
+					request.setAttribute("gameid", gameId);
+					request.setAttribute("game", game);
+					request.getRequestDispatcher("/game.jsp").forward(request, response);
 				
-				// Redirect to JSP page
-				request.setAttribute("gameid", gameId);
-				request.setAttribute("game", game);
-	            request.getRequestDispatcher("/game.jsp").forward(request, response);
+				} else {
+					PrintWriter out = response.getWriter();
+					out.println("GameID: " + gameId + " does not exist. Please either start a new game or join an existing one :)");
+					out.println("<a href=\"/\">Return to home screen</a>");
+				}
 			} catch (Throwable el) {
 				el.printStackTrace();
 			}
 		
+		} else {
+			request.getRequestDispatcher("/").forward(request, response);
 		}
 	}
 }

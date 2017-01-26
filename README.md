@@ -21,6 +21,8 @@ Create player login profiles.
 
 Error pages and handling non existent ids etc.
 
+Decide whether to save data after every move or whether to just save all the moves and save them in bulk every 5 minutes or at the end of a game for example.
+
 REQUIREMENTS:
 
 Sql database - Details in DBAccessor.java
