@@ -39,11 +39,11 @@ public class GameCollection {
 		String[] players = DBAccessor.loadPlayersFromDB(gameId);
 		int[] moves = DBAccessor.loadGameMovesHistory(gameId);
 		
-		Game g = new Game(gameId, players[0], players[1]);
-		
 		if(moves == null) {
 			return null;
 		}
+		
+		Game g = new Game(gameId, players[0], players[1]);
 		
 		for(int i = 0; i < moves.length; i++) {
 			g.playMove(moves[i], g.getNextPlayer());

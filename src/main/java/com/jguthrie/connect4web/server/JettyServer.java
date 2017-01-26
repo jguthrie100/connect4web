@@ -14,6 +14,7 @@ import org.eclipse.jetty.webapp.WebAppContext;
 public class JettyServer {
 
 	private static GameCollection gServer;
+	private static final String PATH_TO_PROJECT = "/home/jguthrie100/eclipse-workspace/connect4web";
 	
 	public static void main(String[] args) throws Exception {
 	    Server server = new Server(8080);
@@ -27,7 +28,7 @@ public class JettyServer {
           classlist.addAfter("org.eclipse.jetty.webapp.FragmentConfiguration", "org.eclipse.jetty.plus.webapp.EnvConfiguration", "org.eclipse.jetty.plus.webapp.PlusConfiguration");
           classlist.addBefore("org.eclipse.jetty.webapp.JettyWebXmlConfiguration", "org.eclipse.jetty.annotations.AnnotationConfiguration");
 
-	    File warPath = new File("/home/jguthrie100/eclipse-workspace/connect4web", "src/main/connect4web");
+	    File warPath = new File(PATH_TO_PROJECT, "src/main/connect4web");
 	    webappcontext.setWar(warPath.getAbsolutePath());
 	    
 	    webappcontext.addServlet(new ServletHolder(new UpdatesServlet(gServer)), "/game/updates/*");
