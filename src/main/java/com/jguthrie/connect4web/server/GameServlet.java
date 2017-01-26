@@ -25,6 +25,8 @@ public class GameServlet extends HttpServlet {
 			IOException {
 		
 		String htmlOut = "";
+		String playerId = request.getRemoteAddr();
+		playerId = request.getParameter("pid");
 		
 		// Main menu
 		if(request.getRequestURI().equals("/")) {
@@ -38,10 +40,13 @@ public class GameServlet extends HttpServlet {
 			out.println(htmlOut);
 		
 		// Handle starting a new game
-		} else if(request.getRequestURI().matches("/game/new(/*?)")) {
+		} else if(request.getRequestURI().matches("/game/new/(.*?)/(.*?)(/*?)")) {
+			if(request.getRequestURI().split("/")[3].equals(null) || request.getRequestURI().split("/")[4].equals(null)) {
+				request.getRequestDispatcher("/").forward(request, response);
+			}
+			System.out.println(request.getRequestURI().split("/")[4]);
+			int gameId = gServer.newGame(request.getRequestURI().split("/")[3], request.getRequestURI().split("/")[4]);
 			
-			int gameId = gServer.newGame();
-			request.setAttribute("game", gServer.getGame(gameId));
             request.getRequestDispatcher("/game/"+ gameId + "/").forward(request, response);
             
         // Handles redirecting to a specific game (and making moves)
@@ -51,10 +56,13 @@ public class GameServlet extends HttpServlet {
 				int gameId = Integer.parseInt(request.getRequestURI().split("/")[2]);
 				Game game = gServer.getGame(gameId);
 				
+				System.out.println(game.getPlayer(1));
+				System.out.println(game.getPlayer(2));
+				
 				// Make move and save move to DB if valid
 				if(request.getParameter("move") != null) {
 					int move = Integer.parseInt(request.getParameter("move"));
-					if(game.playMove(move, gServer.getGame(gameId).getNextColor())) {
+					if(game.playMove(move, gServer.getGame(gameId).getPlayer(playerId))) {
 						DBAccessor.saveMove(gameId, move);
 					}
 					

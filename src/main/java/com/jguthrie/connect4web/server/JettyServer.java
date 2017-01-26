@@ -17,6 +17,7 @@ public class JettyServer {
 	
 	public static void main(String[] args) throws Exception {
 	    Server server = new Server(8080);
+	    DBAccessor.init();
 	    gServer = new GameCollection();
 
 	    WebAppContext webappcontext = new WebAppContext();

@@ -11,7 +11,7 @@ public class DBAccessor {
 	final static String JDBC_URL = "jdbc:mysql://localhost:3306/" + DATABASE;
 	
 	
-	public static void DBAccessor() {
+	public static void init() {
 		
 		String temp_url = "jdbc:mysql://localhost:3306/";
 		
@@ -39,10 +39,12 @@ public class DBAccessor {
 		}
 	}
 	
-	public static boolean initNewGame(int gameId) {
+	public static boolean initNewGame(int gameId, String player1, String player2) {
 		try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
-			PreparedStatement stmt = connection.prepareStatement("INSERT INTO " + GAMES_TABLE + " (`id`) VALUES (?)");
+			PreparedStatement stmt = connection.prepareStatement("INSERT INTO " + GAMES_TABLE + " (`id`, `player1`, `player2`) VALUES (?, ?, ?)");
 			stmt.setInt(1, gameId);
+			stmt.setString(2, player1);
+			stmt.setString(3, player2);
 	        stmt.executeUpdate();
 	        
 		} catch (SQLException e) {
@@ -79,6 +81,25 @@ public class DBAccessor {
 		return null;
 	}
 	
+	public static String[] loadPlayersFromDB(int gameId) {
+		try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
+			PreparedStatement stmt = connection.prepareStatement("SELECT player1, player2 FROM " + GAMES_TABLE + " WHERE id = ?");
+			stmt.setInt(1, gameId);
+	        ResultSet rs = stmt.executeQuery();
+	        
+	        while (rs.next()) {
+	        	String[] players = {rs.getString(1), rs.getString(2)};
+	        	return players;
+	        }
+	        
+		} catch (SQLException e) {
+		    throw new IllegalStateException("Cannot load game history!", e);
+		}
+		
+		// Returns null if gameId doesn't exist (i.e. no rows were returned)
+		return null;
+	}
+	
 	public static boolean saveMove(int gameId, int move) {
 		try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
 			PreparedStatement stmt = connection.prepareStatement("UPDATE " + GAMES_TABLE + " SET moves = LTRIM(concat(ifnull(moves,''), ?)) WHERE id = ?");
@@ -105,7 +126,7 @@ public class DBAccessor {
 	        }
 	        
 		} catch (SQLException e) {
-		    throw new IllegalStateException("Cannot load game history!", e);
+		    throw new IllegalStateException("Cannot load next game ID!", e);
 		}
 		
 		return -1;

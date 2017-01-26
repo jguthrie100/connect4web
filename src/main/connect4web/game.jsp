@@ -2,7 +2,8 @@
 <html>
 <head>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<title>Gluck Connect 4 App (by Jamie Guthrie)</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<title>Gl&#252;ck Connect 4 App (by Jamie Guthrie)</title>
 <meta>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 </meta>
@@ -10,22 +11,23 @@
 
 <body>
 	<script>
+		// Not entirely sure how the events work, but current implemenation
+		// seems to have "open" event triggered every time there is a change
 		var source = new EventSource('/game/updates/${gameid}');
 	 	source.addEventListener('open', function(e) {
-	 		window.location.replace(window.location.pathname);
+	 		window.location.replace(window.location.pathname + '?pid=${param.pid}');
 	 	}, false);
 	 	source.onmessage = function(e) {
-	 		window.location.replace(window.location.pathname);
+	 		//window.location.replace(window.location.pathname);
 	 	};
  	</script>
  
 	<c:out value="Connect 4 by Jamie Guthrie"></c:out>
 	<br /><br />
-	<div id="content"></div>
 	<table border="1">
 		<tr>
 			<c:forEach begin="0" end="${game.getBoard().getNumCols()-1}" varStatus="cols">
-				<td><a href="/game/${gameid}/?move=${cols.index}">&#11015;</td>
+				<td><a id="link${cols.index}" href="/game/${gameid}/?move=${cols.index}&pid=${param.pid}">&#11015;</td>
 			</c:forEach>
 		</tr>
 		<c:forEach begin="0" end="${game.getBoard().getNumRows()-1}" varStatus="rows">
@@ -45,7 +47,17 @@
 	        Next player is: <span style="background:${game.getNextColor()}">&nbsp;&nbsp;</span>
 	    </c:otherwise>
 	</c:choose>
-	
-	
+	<br />
+	Player Name: <input id="pid" type="text" value="${param.pid}" />
+	<script>
+		$('#pid').keyup(function () {
+			for(var i = 0; i < <c:out value="${game.getBoard().getNumCols()}"></c:out>; i++) {
+				var new_href = document.getElementById("link" + i).href.split("&pid=")[0] + '&pid=' + $('#pid').val();
+	    		$('#link' + i).attr("href", new_href);
+	    	}
+		});
+	</script>
+	<br /><br />
+	<div>Players: <i>${game.getPlayer(1)}</i> <span style="background:red">&nbsp;&nbsp;</span> vs <i>${game.getPlayer(2)}</i> <span style="background:yellow">&nbsp;&nbsp;</span></div>
 </body>
 </html>
