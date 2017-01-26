@@ -29,6 +29,10 @@
 		<artifactId>apache-jsp</artifactId>
 	</dependency>
 	<dependency>
+		<groupId>org.eclipse.jetty</groupId>
+		<artifactId>jetty-eventsource-servlet</artifactId>
+	</dependency>
+	<dependency>
 		<groupId>jstl</groupId>
 		<artifactId>jstl</artifactId>
 	</dependency>
@@ -64,6 +68,11 @@
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>apache-jsp</artifactId>
 			<version>9.3.15.v20161220</version>
+		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-eventsource-servlet</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>jstl</groupId>

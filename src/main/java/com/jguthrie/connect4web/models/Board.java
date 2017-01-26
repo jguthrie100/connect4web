@@ -63,10 +63,7 @@ public class Board {
 		
 		// Iterate down the column, checking if there is a token in the row below or not
 		for(int row = this.numRows-1; row >= 0; row--) {
-			if(row == 0) {
-				setCell(row, col, t);
-				return new int[]{row, col};
-			} else if(!cellIsEmpty(row-1, col)) {
+			if(!isCell(row-1, col) || !cellIsEmpty(row-1, col)) {
 				setCell(row, col, t);
 				return new int[]{row, col};
 			}
@@ -127,10 +124,10 @@ public class Board {
 		Color c = getCell(row, col).getColor();
 		int length = 1;
 		int[] curCell = {row, col};
-		int changeDir = 0;
+		int reverseDir = 0;
 		
 		// Search for chain of tokens joining current token
-		while(length < 4 && changeDir <= 1) {
+		while(length < 4 && reverseDir <= 1) {
 			curCell[0] += dir[0];
 			curCell[1] += dir[1];
 			
@@ -146,7 +143,7 @@ public class Board {
 				dir[1] = (0 - dir[1]);
 				
 				// log change in direction
-			    changeDir++;
+			    reverseDir++;
 			}
 		}
 		

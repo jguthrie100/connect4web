@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 <head>
 <link rel="icon" href="data:;base64,iVBORw0KGgo=">
@@ -7,13 +8,20 @@
 </meta>
 </head>
 
-<c:if test="${param.move != null}">
-  <c:set var="moveSuccess" value="${game.playMove(param.move, game.getNextColor())}" />
-</c:if>
-
 <body>
+	<script>
+		var source = new EventSource('/game/updates/${gameid}');
+	 	source.addEventListener('open', function(e) {
+	 		window.location.replace(window.location.pathname);
+	 	}, false);
+	 	source.onmessage = function(e) {
+	 		window.location.replace(window.location.pathname);
+	 	};
+ 	</script>
+ 
 	<c:out value="Connect 4 by Jamie Guthrie"></c:out>
 	<br /><br />
+	<div id="content"></div>
 	<table border="1">
 		<tr>
 			<c:forEach begin="0" end="${game.getBoard().getNumCols()-1}" varStatus="cols">

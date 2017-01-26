@@ -6,31 +6,44 @@ import com.jguthrie.connect4web.server.DBAccessor;
 
 public class GameCollection {
 	
-	private DBAccessor dba;
 	private HashMap<Integer, Game> games;
-
-	private int nextGame = 0;
+	private int nextGameId;
 	
 	public GameCollection() {
 		games = new HashMap<Integer, Game>();
-		dba = new DBAccessor();
-	}
-	
-	public Game getGame(int gameId) {
-		return games.get(gameId);
+		this.nextGameId = DBAccessor.getNextGameId();
 	}
 	
 	public int newGame() {
-		Game g = new Game();
-		games.put(this.nextGame++, g);
 		
-		return this.nextGame-1;
+		if(getGame(this.nextGameId) != null) {
+			this.nextGameId++;
+			return newGame();
+		} else {
+			Game g = new Game();
+			games.put(this.nextGameId, g);
+			DBAccessor.initNewGame(this.nextGameId);
+		}
+		
+		return this.nextGameId++;
 	}
 	
-	public Game loadGame(int gameId) {
+	public Game getGame(int gameId) {
+		if(games.containsKey(gameId)) {
+			return games.get(gameId);
+		} else {
+			return loadGameFromDB(gameId);
+		}
+	}
+	
+	public Game loadGameFromDB(int gameId) {
 		Game g = new Game();
 		
-		int[] moves = dba.loadGameHistory(gameId);
+		int[] moves = DBAccessor.loadGameMovesHistory(gameId);
+		
+		if(moves == null) {
+			return null;
+		}
 		
 		for(int i = 0; i < moves.length; i++) {
 			g.playMove(moves[i], g.getNextColor());

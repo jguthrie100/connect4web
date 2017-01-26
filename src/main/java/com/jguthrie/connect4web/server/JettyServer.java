@@ -1,18 +1,15 @@
 package com.jguthrie.connect4web.server;
 
+import com.jguthrie.connect4web.models.GameCollection;
+
 import java.io.File;
 
 import org.eclipse.jetty.server.Handler;
-import org.eclipse.jetty.server.HttpConnectionFactory;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.DefaultHandler;
-import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.WebAppContext;
-
-import com.jguthrie.connect4web.models.GameCollection;
 
 public class JettyServer {
 
@@ -32,11 +29,14 @@ public class JettyServer {
 	    File warPath = new File("/home/jguthrie100/eclipse-workspace/connect4web", "src/main/connect4web");
 	    webappcontext.setWar(warPath.getAbsolutePath());
 	    
-	    HandlerList handlers = new HandlerList();
-	    webappcontext.addServlet(new ServletHolder(new GameServlet(gServer)), "/game/*");
+	    webappcontext.addServlet(new ServletHolder(new UpdatesServlet(gServer)), "/game/updates/*");
+	    webappcontext.addServlet(new ServletHolder(new GameServlet(gServer)), "/");
 
+	    HandlerList handlers = new HandlerList();
 	    handlers.setHandlers(new Handler[] { webappcontext, new DefaultHandler() });
 	    server.setHandler(handlers);
 	    server.start();
+	    
+	    
 	}
 }

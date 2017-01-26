@@ -1,5 +1,8 @@
 package com.jguthrie.connect4web.server;
 
+import com.jguthrie.connect4web.models.Game;
+import com.jguthrie.connect4web.models.GameCollection;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -8,10 +11,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.jguthrie.connect4web.models.GameCollection;
-
 public class GameServlet extends HttpServlet {
-	//private final long serialVersionUID = -6154475799000019575L;
+	private static final long serialVersionUID = -6154475799000019575L;
+	
 	private GameCollection gServer;
 	
 	public GameServlet(GameCollection gServer) {
@@ -24,7 +26,8 @@ public class GameServlet extends HttpServlet {
 		
 		String htmlOut = "";
 		
-		if(request.getRequestURI().equals("/game")) {
+		// Main menu
+		if(request.getRequestURI().equals("/")) {
 			PrintWriter out = response.getWriter();
 			
 			htmlOut += "<h1>Welcome to Jamie's Connect 4 Game..</h1>";
@@ -33,19 +36,33 @@ public class GameServlet extends HttpServlet {
 			htmlOut += "<a href=\"/game/load\">Load a game</a>";
 			
 			out.println(htmlOut);
-			
-		} else if(request.getRequestURI().equals("/game/new")) {
+		
+		// Handle starting a new game
+		} else if(request.getRequestURI().matches("/game/new(/*?)")) {
 			
 			int gameId = gServer.newGame();
 			request.setAttribute("game", gServer.getGame(gameId));
             request.getRequestDispatcher("/game/"+ gameId + "/").forward(request, response);
             
+        // Handles redirecting to a specific game (and making moves)
 		} else if(request.getRequestURI().matches("/game/\\d+(/*?)")) {
 			
 			try {
 				int gameId = Integer.parseInt(request.getRequestURI().split("/")[2]);
+				Game game = gServer.getGame(gameId);
+				
+				// Make move and save move to DB if valid
+				if(request.getParameter("move") != null) {
+					int move = Integer.parseInt(request.getParameter("move"));
+					if(game.playMove(move, gServer.getGame(gameId).getNextColor())) {
+						DBAccessor.saveMove(gameId, move);
+					}
+					
+				}
+				
+				// Redirect to JSP page
 				request.setAttribute("gameid", gameId);
-				request.setAttribute("game", gServer.getGame(gameId));
+				request.setAttribute("game", game);
 	            request.getRequestDispatcher("/game.jsp").forward(request, response);
 			} catch (Throwable el) {
 				el.printStackTrace();
