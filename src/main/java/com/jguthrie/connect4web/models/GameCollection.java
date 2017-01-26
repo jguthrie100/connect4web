@@ -1,8 +1,8 @@
-package com.jguthrie.glucktest.models;
+package com.jguthrie.connect4web.models;
 
 import java.util.HashMap;
 
-import com.jguthrie.glucktest.server.DBAccessor;
+import com.jguthrie.connect4web.server.DBAccessor;
 
 public class GameCollection {
 	

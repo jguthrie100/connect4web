@@ -1,6 +1,6 @@
-package com.jguthrie.glucktest.models;
+package com.jguthrie.connect4web.models;
 
-import com.jguthrie.glucktest.models.Token.Color;
+import com.jguthrie.connect4web.models.Token.Color;
 
 public class Game {
 	

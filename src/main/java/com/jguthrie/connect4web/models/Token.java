@@ -1,4 +1,4 @@
-package com.jguthrie.glucktest.models;
+package com.jguthrie.connect4web.models;
 
 public class Token {
 	

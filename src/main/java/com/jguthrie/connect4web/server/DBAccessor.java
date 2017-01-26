@@ -1,4 +1,4 @@
-package com.jguthrie.glucktest.server;
+package com.jguthrie.connect4web.server;
 
 import java.sql.*;
 
@@ -6,7 +6,7 @@ public class DBAccessor {
 	
 	final String USERNAME = "java";
 	final String PASSWORD = "javapass1";
-	final String DATABASE = "glucktest";
+	final String DATABASE = "connect4web";
 	final String GAMES_TABLE = "games";
 	final String JDBC_URL = "jdbc:mysql://localhost:3306/" + DATABASE;
 	

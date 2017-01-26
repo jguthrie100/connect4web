@@ -1,4 +1,4 @@
-package com.jguthrie.glucktest.server;
+package com.jguthrie.connect4web.server;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.jguthrie.glucktest.models.GameCollection;
+import com.jguthrie.connect4web.models.GameCollection;
 
 public class GameServlet extends HttpServlet {
 	//private final long serialVersionUID = -6154475799000019575L;
@@ -23,7 +23,6 @@ public class GameServlet extends HttpServlet {
 			IOException {
 		
 		String htmlOut = "";
-		System.out.println(request.getRequestURI());
 		
 		if(request.getRequestURI().equals("/game")) {
 			PrintWriter out = response.getWriter();
@@ -42,7 +41,6 @@ public class GameServlet extends HttpServlet {
             request.getRequestDispatcher("/game/"+ gameId + "/").forward(request, response);
             
 		} else if(request.getRequestURI().matches("/game/\\d+(/*?)")) {
-			System.out.println("Found digit");
 			
 			try {
 				int gameId = Integer.parseInt(request.getRequestURI().split("/")[2]);

@@ -1,4 +1,4 @@
-package com.jguthrie.glucktest.server;
+package com.jguthrie.connect4web.server;
 
 import java.io.File;
 
@@ -12,7 +12,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.WebAppContext;
 
-import com.jguthrie.glucktest.models.GameCollection;
+import com.jguthrie.connect4web.models.GameCollection;
 
 public class JettyServer {
 
@@ -29,7 +29,7 @@ public class JettyServer {
           classlist.addAfter("org.eclipse.jetty.webapp.FragmentConfiguration", "org.eclipse.jetty.plus.webapp.EnvConfiguration", "org.eclipse.jetty.plus.webapp.PlusConfiguration");
           classlist.addBefore("org.eclipse.jetty.webapp.JettyWebXmlConfiguration", "org.eclipse.jetty.annotations.AnnotationConfiguration");
 
-	    File warPath = new File("/home/jguthrie100/eclipse-workspace/connect-4-test", "src/main/connect4web");
+	    File warPath = new File("/home/jguthrie100/eclipse-workspace/connect4web", "src/main/connect4web");
 	    webappcontext.setWar(warPath.getAbsolutePath());
 	    
 	    HandlerList handlers = new HandlerList();
