@@ -46,7 +46,7 @@ public class GameServlet extends HttpServlet {
 			out.println(htmlOut);
 		
 		// Handle starting a new game
-		} else if(request.getRequestURI().matches("/game/new/(.*?)/(.*?)(/*?)")) {
+		} else if(request.getRequestURI().matches("/game/new/(.+?)/(.+?)(/*?)")) {
 			
 			String player1 = request.getRequestURI().split("/")[3];
 			String player2 = request.getRequestURI().split("/")[4];
