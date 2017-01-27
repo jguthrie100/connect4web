@@ -2,6 +2,12 @@ package com.jguthrie.connect4web.server;
 
 import java.sql.*;
 
+/**
+ * Handles all interactions with the database.
+ * 
+ * @author jguthrie100
+ *
+ */
 public class DBAccessor {
 	
 	final static String USERNAME = "java";
@@ -10,7 +16,9 @@ public class DBAccessor {
 	final static String GAMES_TABLE = "games";
 	final static String JDBC_URL = "jdbc:mysql://localhost:3306/" + DATABASE + "?useSSL=false";
 	
-	
+	/**
+	 * Prepare the database by creating database and Game table if not already present.
+	 */
 	public static void init() {
 		
 		String temp_url = "jdbc:mysql://localhost:3306/?useSSL=false";
@@ -39,6 +47,13 @@ public class DBAccessor {
 		}
 	}
 	
+	/**
+	 * Creates a Game instance by creating a new row in the table containing game id and player names
+	 * @param gameId
+	 * @param player1
+	 * @param player2
+	 * @return
+	 */
 	public static boolean initNewGame(int gameId, String player1, String player2) {
 		try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
 			PreparedStatement stmt = connection.prepareStatement("INSERT INTO " + GAMES_TABLE + " (`id`, `player1`, `player2`) VALUES (?, ?, ?)");
@@ -54,6 +69,11 @@ public class DBAccessor {
 		return true;
 	}
 	
+	/**
+	 * Loads the list of moves that have been made in an existing game
+	 * @param gameId
+	 * @return Array of integers containing the game moves
+	 */
 	public static int[] loadGameMovesHistory(int gameId) {
 		try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
 			PreparedStatement stmt = connection.prepareStatement("SELECT moves FROM " + GAMES_TABLE + " WHERE id = ?");
@@ -81,6 +101,11 @@ public class DBAccessor {
 		return null;
 	}
 	
+	/**
+	 * Loads the two player 'tags' that belong to the specified game
+	 * @param gameId
+	 * @return Array with two cells, each one containing a player name
+	 */
 	public static String[] loadPlayersFromDB(int gameId) {
 		try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
 			PreparedStatement stmt = connection.prepareStatement("SELECT player1, player2 FROM " + GAMES_TABLE + " WHERE id = ?");
@@ -100,6 +125,13 @@ public class DBAccessor {
 		return null;
 	}
 	
+	/**
+	 * Appends a move to the list of existing moves for a specific Game,
+	 *   building up a record of all the moves in a each game
+	 * @param gameId
+	 * @param move
+	 * @return
+	 */
 	public static boolean saveMove(int gameId, int move) {
 		try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
 			PreparedStatement stmt = connection.prepareStatement("UPDATE " + GAMES_TABLE + " SET moves = LTRIM(concat(ifnull(moves,''), ?)) WHERE id = ?");
@@ -114,6 +146,10 @@ public class DBAccessor {
 		return true;
 	}
 	
+	/**
+	 * Returns the ID to be used for the next Game (ie. the next value of the game tables AUTO_INCREMENT value)
+	 * @return
+	 */
 	public static int getNextGameId() {
 		try (Connection connection = DriverManager.getConnection(JDBC_URL, USERNAME, PASSWORD)) {
 			PreparedStatement stmt = connection.prepareStatement("SELECT `AUTO_INCREMENT` from INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = ? AND TABLE_NAME = ?");

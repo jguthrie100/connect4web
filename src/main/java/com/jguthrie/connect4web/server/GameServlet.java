@@ -10,7 +10,14 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+/**
+ * The GameServlet handles directing the client when starting a new game or making a move.
+ * 
+ * It either responds with a 'menu' screen, starts a new Game, or displays an existing game (and 
+ *   makes the requested move if a move is passed in the parameter list)
+ * @author jguthrie100
+ *
+ */
 public class GameServlet extends HttpServlet {
 	private static final long serialVersionUID = -6154475799000019575L;
 	
@@ -41,9 +48,18 @@ public class GameServlet extends HttpServlet {
 		// Handle starting a new game
 		} else if(request.getRequestURI().matches("/game/new/(.*?)/(.*?)(/*?)")) {
 			
-			int gameId = gServer.newGame(request.getRequestURI().split("/")[3], request.getRequestURI().split("/")[4]);
+			String player1 = request.getRequestURI().split("/")[3];
+			String player2 = request.getRequestURI().split("/")[4];
 			
-            request.getRequestDispatcher("/game/"+ gameId + "/?pid=" + request.getRequestURI().split("/")[3]).forward(request, response);
+			if(player1.equals(player2)) {
+				PrintWriter out = response.getWriter();
+				out.println("Players must have different names: " + player1 + " & " + player2 + " are the same..");
+				out.println("<a href=\"/\">Return to home screen</a>");
+			
+			} else {
+				int gameId = gServer.newGame(player1, player2);
+	            request.getRequestDispatcher("/game/"+ gameId + "/?pid=" + player1).forward(request, response);
+			}
             
         // Handles redirecting to a specific game (and making moves)
 		} else if(request.getRequestURI().matches("/game/\\d+(/*?)")) {
@@ -56,7 +72,7 @@ public class GameServlet extends HttpServlet {
 					// Make move and save move to DB if valid
 					if(request.getParameter("move") != null) {
 						int move = Integer.parseInt(request.getParameter("move"));
-						if(game.playMove(move, gServer.getGame(gameId).getPlayer(pid))) {
+						if(game.playMove(move, gServer.getGame(gameId).getPlayerNum(pid))) {
 							DBAccessor.saveMove(gameId, move);
 						}
 					}

@@ -10,6 +10,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * This servlet waiting/looping and checking to see if the Game object has had any moves made in it.
+ *  If a move has been made (i.e. by the other player), then it sends a message to the client and exits.
+ * @author jguthrie100
+ *
+ */
 public class UpdatesServlet extends HttpServlet {
 	private static final long serialVersionUID = -6154475799000019575L;
 	private GameCollection gServer;

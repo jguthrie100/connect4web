@@ -11,6 +11,12 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.webapp.WebAppContext;
 
+/**
+ * 
+ * Main Server class.
+ * This class simply sets up a Jetty Server instance, initializes the database,
+ *   and redirects HTTP traffic to the relevant servlets.
+ */
 public class JettyServer {
 
 	private static GameCollection gServer;

@@ -2,6 +2,11 @@ package com.jguthrie.connect4web.models;
 
 import com.jguthrie.connect4web.models.Token.Color;
 
+/**
+ * Models the board and contains most of the logic for determining whether there is a winner
+ * @author jguthrie100
+ *
+ */
 public class Board {
 
 	private int numRows, numCols;
@@ -42,6 +47,12 @@ public class Board {
 		this.board[row][col] = t;
 	}
 	
+	/**
+	 * Returns whether or not the given row, col combination is a cell
+	 * @param row
+	 * @param col
+	 * @return
+	 */
 	public boolean isCell(int row, int col) {
 		if(row >= 0 && row < this.numRows && col >= 0 && col < this.numCols) {
 			return true;
@@ -56,7 +67,13 @@ public class Board {
 		return (this.board[row][col] == null);
 	}
 	
-	public int[] playMove(int col, Token t) {
+	/**
+	 * Method that metaphorically drops the token into the board at a specific column
+	 * @param col
+	 * @param t
+	 * @return Final 'resting' position of the token
+	 */
+	public int[] dropToken(int col, Token t) {
 		if(col < 0 || col >= this.numCols || !cellIsEmpty(this.numRows-1, col)) {
 			return null;
 		}
@@ -73,31 +90,17 @@ public class Board {
 		return null;
 	}
 	
-	public Color isWinner() {
-		for(int row = 0; row < this.numRows; row++) {
-			for(int col = 0; col < this.numCols; col++) {
-				if(fourInARow(row, col)) {
-					return getCell(row, col).getColor();
-				}
-			}
-		}
-		return null;
-	}
-	
-	public Color isWinner(int row, int col) {
-		checkRowCol(row, col);
-		
-		if(fourInARow(row, col)) {
-			return getCell(row, col).getColor();
-		} else {
-			return null;
-		}
-	}
-	
-	private boolean fourInARow(int row, int col) {
+	/**
+	 * Determine whether there is a chain of four same-coloured tokens crossing the
+	 *  point at the specified row & col
+	 * @param row
+	 * @param col
+	 * @return
+	 */
+	public boolean fourInARow(int row, int col) {
 		checkRowCol(row, col);
 
-		// Check for chain of 4 tokens in each direction
+		// Check for chain of 4 tokens in each direction (up, down, diagonal)
 		if(fourInARow(row, col, new int[]{1, 0})) {
 			return true;
 		}
@@ -114,7 +117,18 @@ public class Board {
 		return false;
 	}
 	
-	private boolean fourInARow(int row, int col, int[] dir) {
+	/**
+	 * Determine whether there is a chain of four same-coloured tokens crossing the
+	 *  point at the specified row & col, and in the given direction.
+	 *  The direction integer works by basically saying "look in direction [0, 1]", which means
+	 *  look in the direction moving 0 rows up and 1 cols across.. i.e. in East direction
+	 *  [1, 1] means go 1 row up and 1 row across, and [-1, 0] means go 1 row down and 0 cols across.
+	 * @param row
+	 * @param col
+	 * @param dir An array of two integers (1 or 0)
+	 * @return
+	 */
+	public boolean fourInARow(int row, int col, int[] dir) {
 		checkRowCol(row, col);
 		
 		if(cellIsEmpty(row, col)) {
@@ -126,7 +140,7 @@ public class Board {
 		int[] curCell = {row, col};
 		int reverseDir = 0;
 		
-		// Search for chain of tokens joining current token
+		// Search for chain of tokens
 		while(length < 4 && reverseDir <= 1) {
 			curCell[0] += dir[0];
 			curCell[1] += dir[1];
@@ -150,7 +164,7 @@ public class Board {
 		return (length >= 4);
 	}
 	
-	private void checkRowCol(int row, int col) {
+	public void checkRowCol(int row, int col) {
 		if(!isCell(row, col)) {
 			throw new IndexOutOfBoundsException();
 		}
