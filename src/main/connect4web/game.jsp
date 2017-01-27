@@ -23,7 +23,10 @@
  	</script>
  
 	<c:out value="Connect 4 by Jamie Guthrie"></c:out>
-	<br /><br />
+	<br />
+	<h3>Playing as: <i><span id="playername">${param.pid}</span></i></h3>
+	<div>Players: <i>${game.getPlayerTag(1)}</i> <span style="background:red">&nbsp;&nbsp;</span> vs <i>${game.getPlayerTag(2)}</i> <span style="background:yellow">&nbsp;&nbsp;</span></div>
+	<br />
 	<table border="1">
 		<tr>
 			<c:forEach begin="0" end="${game.getBoard().getNumCols()-1}" varStatus="cols">
@@ -41,23 +44,23 @@
 	<br />
 	<c:choose>
 	    <c:when test="${game.getWinner() != null}">
-	        Player <span style="background:${game.getWinner()}">&nbsp;&nbsp;</span> wins!!
+	        <b>Player <span style="background:${game.getWinner()}">&nbsp;&nbsp;</span> wins!!</b>
 	    </c:when>    
 	    <c:otherwise>
 	        Next player is: <span style="background:${game.getNextColor()}">&nbsp;&nbsp;</span>
 	    </c:otherwise>
 	</c:choose>
-	<br />
-	Player Name: <input id="pid" type="text" value="${param.pid}" />
+	<br /><br />
+	Change Name: <input id="pid" type="text" value="${param.pid}" />
 	<script>
 		$('#pid').keyup(function () {
 			for(var i = 0; i < <c:out value="${game.getBoard().getNumCols()}"></c:out>; i++) {
 				var new_href = document.getElementById("link" + i).href.split("&pid=")[0] + '&pid=' + $('#pid').val();
 	    		$('#link' + i).attr("href", new_href);
 	    	}
+	    	$('#playername').text($('#pid').val());
 		});
 	</script>
 	<br /><br />
-	<div>Players: <i>${game.getPlayer(1)}</i> <span style="background:red">&nbsp;&nbsp;</span> vs <i>${game.getPlayer(2)}</i> <span style="background:yellow">&nbsp;&nbsp;</span></div>
 </body>
 </html>
