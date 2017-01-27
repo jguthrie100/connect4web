@@ -6,10 +6,11 @@ Start server with:
   mvn clean compile exec:java
 
 To start a new game go to:
- http://localhost:8080/game/new/[player1name]/[player2name]/  (put in any string values you want to use as identifiers for player 1 and 2)
+ http://localhost:8080/ and click on "Start new game"
  
 You'll be redirected to the game page where you can start making moves.
-There is no user verification, so just putting the name of the player you want to be in the textbox will let you make moves for that player.
+There is no user verification, so just putting the name of the player you want to be (player1 or player2) will let you make moves for that player.
+(Change the names by starting a new game manually and changing the player name values in the URL)
 
 To go back to an old game, just navigate to:
 http://localhost:8080/game/[game id]
