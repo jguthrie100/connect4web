@@ -10,6 +10,13 @@
 </head>
 
 <body>
+	<c:set var="pid1checked" value="checked" />
+	<c:set var="pid2checked" value="" />
+	<c:if test="${param.pid == game.getPlayerTag(2)}">
+		<c:set var="pid1checked" value="" />
+		<c:set var="pid2checked" value="checked" />
+	</c:if>
+	
 	<script>
 		// Not entirely sure how the events work, but current implemenation
 		// seems to have "open" event triggered every time there is a change
@@ -21,11 +28,12 @@
 	 		//window.location.replace(window.location.pathname);
 	 	};
  	</script>
- 
+
 	<c:out value="Connect 4 by Jamie Guthrie"></c:out>
-	<br />
-	<h3>Playing as: <i><span id="playername">${param.pid}</span></i></h3>
-	<div>Players: <i>${game.getPlayerTag(1)}</i> <span style="background:red">&nbsp;&nbsp;</span> vs <i>${game.getPlayerTag(2)}</i> <span style="background:yellow">&nbsp;&nbsp;</span></div>
+	<br /><br />
+	<div><b>Choose player:</b><br />
+	<input id="pid1" type="radio" name="playerchoice" ${pid1checked}/><b>${game.getPlayerTag(1)}</b> <span style="background:red">&nbsp;&nbsp;</span><br />
+	<input id="pid2" type="radio" name="playerchoice" ${pid2checked}/><b>${game.getPlayerTag(2)}</b> <span style="background:yellow">&nbsp;&nbsp;</span></div>
 	<br />
 	<table border="1">
 		<tr>
@@ -45,20 +53,25 @@
 	<c:choose>
 	    <c:when test="${game.getWinner() != null}">
 	        <b>Player <span style="background:${game.getWinner()}">&nbsp;&nbsp;</span> wins!!</b>
-	    </c:when>    
+	    </c:when>
 	    <c:otherwise>
-	        Next player is: <span style="background:${game.getNextColor()}">&nbsp;&nbsp;</span>
+	        Next player is: <b>${game.getPlayerTag(game.getNextPlayer())}</b> <span style="background:${game.getNextColor()}">&nbsp;&nbsp;</span>
 	    </c:otherwise>
 	</c:choose>
-	<br /><br />
-	Change Name: <input id="pid" type="text" value="${param.pid}" />
 	<script>
-		$('#pid').keyup(function () {
+		$('[type=radio]').change(function() {
+
+			var pid = "";
+			if($('#pid1').is(':checked')) {
+				pid = "${game.getPlayerTag(1)}"
+			} else {
+				pid = "${game.getPlayerTag(2)}"
+			}
 			for(var i = 0; i < <c:out value="${game.getBoard().getNumCols()}"></c:out>; i++) {
-				var new_href = document.getElementById("link" + i).href.split("&pid=")[0] + '&pid=' + $('#pid').val();
-	    		$('#link' + i).attr("href", new_href);
-	    	}
-	    	$('#playername').text($('#pid').val());
+				var new_href = document.getElementById("link" + i).href.split("&pid=")[0] + '&pid=' + pid;
+				$('#link' + i).attr("href", new_href);
+			}
+			$('#playername').text(pid);
 		});
 	</script>
 	<br /><br />
